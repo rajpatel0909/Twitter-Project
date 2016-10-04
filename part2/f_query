@@ -1,0 +1,10 @@
+SELECT DISTINCT count(*)
+FROM(
+	(SELECT DISTINCT f1.docid as doc1, f1.term as term1
+	FROM frequency f1
+	WHERE f1.term = "transactions") a,
+	(SELECT DISTINCT f2.docid as doc2, f2.term as term1
+	FROM frequency f2
+	WHERE f2.term = "world") b
+	)
+WHERE a.doc1 = b.doc2;

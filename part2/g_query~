@@ -1,0 +1,15 @@
+SELECT n.r, p.c, sum(A.value*B.value)
+FROM A a, B b, (SELECT DISTINCT row_num as co FROM
+(SELECT row_num FROM A
+UNION
+SELECT row_num FROM B))m, 
+(SELECT DISTINCT row_num as r FROM
+(SELECT row_num FROM A
+UNION
+SELECT row_num FROM B))n,
+(SELECT DISTINCT row_num as c FROM
+(SELECT row_num FROM A
+UNION
+SELECT row_num FROM B))p
+WHERE (a.row_num = n.r AND a.col_num = m.co AND b.row_num = m.co AND b.col_num = p.c)
+GROUP BY n.r, p.c;

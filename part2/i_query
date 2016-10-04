@@ -1,0 +1,22 @@
+SELECT max(m)
+FROM(
+SELECT docid, sum(co) as m
+FROM(
+SELECT y.docid, (x.count*y.count) as co
+FROM
+	(SELECT docid, term, count FROM (SELECT * FROM frequency
+UNION
+SELECT 'q' as docid, 'washington' as term, 1 as count
+UNION
+SELECT 'q' as docid, 'taxes' as term, 1 as count
+UNION
+SELECT 'q' as docid, 'treasury' as term, 1 as count)f1
+	
+	WHERE f1.docid = "q")x,
+
+	(SELECT docid, term, count FROM frequency)y
+	
+WHERE x.term = y.term
+)
+GROUP BY docid
+);

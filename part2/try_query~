@@ -1,0 +1,7 @@
+
+SELECT sum(A.value*B.value)
+FROM A a, B b, (SELECT DISTINCT row_num as co FROM
+(SELECT row_num FROM A
+UNION
+SELECT row_num FROM B))m
+WHERE (a.row_num = 2 AND a.col_num = m.co AND b.row_num = m.co AND b.col_num = 3);

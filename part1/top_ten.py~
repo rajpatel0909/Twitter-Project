@@ -1,0 +1,66 @@
+import sys
+import json
+import re
+
+def hw():
+    print 'Hello, world!'
+
+def lines(fp):
+	i = len(fp.readlines())
+	#print i
+	return i
+
+def main():
+	tweet_file = open(sys.argv[1])
+	#hw()
+	l_t = lines(tweet_file)
+	scores = {}
+	tweet_file.seek(0,0)
+	
+	#creating list for lines in output.json file
+	data = []
+	for line in tweet_file:
+		data.append(json.loads(line))
+	#pprint(data)
+	
+	#creating list for entities from data list
+	tweets = []
+	i = 0
+	l = 0
+	while i < l_t:
+		try:
+			tweets.append(data[i]["entities"]["hashtags"])
+			#print "called"
+			l = l + 1
+			i = i + 1
+		except:
+			i = i + 1
+	
+	hashvalues = {}
+	i = 0
+	while i < len(tweets):
+		try:
+			tr = tweets[i][0]["text"]
+			if hashvalues.has_key(tr):
+				hashvalues[tr] = hashvalues[tr] + 1
+			else:
+				hashvalues[tr] = 1		
+			i = i + 1
+		except:
+			i = i + 1
+
+	i = 0
+	for w in sorted(hashvalues, key=hashvalues.get, reverse=True):
+		if i = 10:
+			break
+		i = i + 1
+		print w," ",hashvalues[w]
+
+	#hash_keys = hashvalues.keys()
+	#for k in hash_keys:
+		#print k," ",hashvalues[k]
+	
+	
+
+if __name__ == '__main__':
+    main()

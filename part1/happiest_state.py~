@@ -1,0 +1,137 @@
+import sys
+import re
+import json
+from pprint import pprint
+
+def hw():
+    print 'Hello, world!'
+
+def lines(fp):
+	i = len(fp.readlines())
+	#print i
+	return i
+
+def main():
+	states = {
+        'AK': 'Alaska',
+        'AL': 'Alabama',
+        'AR': 'Arkansas',
+        'AS': 'American Samoa',
+        'AZ': 'Arizona',
+        'CA': 'California',
+        'CO': 'Colorado',
+        'CT': 'Connecticut',
+        'DC': 'District of Columbia',
+        'DE': 'Delaware',
+        'FL': 'Florida',
+        'GA': 'Georgia',
+        'GU': 'Guam',
+        'HI': 'Hawaii',
+        'IA': 'Iowa',
+        'ID': 'Idaho',
+        'IL': 'Illinois',
+        'IN': 'Indiana',
+        'KS': 'Kansas',
+        'KY': 'Kentucky',
+        'LA': 'Louisiana',
+        'MA': 'Massachusetts',
+        'MD': 'Maryland',
+        'ME': 'Maine',
+        'MI': 'Michigan',
+        'MN': 'Minnesota',
+        'MO': 'Missouri',
+        'MP': 'Northern Mariana Islands',
+        'MS': 'Mississippi',
+        'MT': 'Montana',
+        'NA': 'National',
+        'NC': 'North Carolina',
+        'ND': 'North Dakota',
+        'NE': 'Nebraska',
+        'NH': 'New Hampshire',
+        'NJ': 'New Jersey',
+        'NM': 'New Mexico',
+        'NV': 'Nevada',
+        'NY': 'New York',
+        'OH': 'Ohio',
+        'OK': 'Oklahoma',
+        'OR': 'Oregon',
+        'PA': 'Pennsylvania',
+        'PR': 'Puerto Rico',
+        'RI': 'Rhode Island',
+        'SC': 'South Carolina',
+        'SD': 'South Dakota',
+        'TN': 'Tennessee',
+        'TX': 'Texas',
+        'UT': 'Utah',
+        'VA': 'Virginia',
+        'VI': 'Virgin Islands',
+        'VT': 'Vermont',
+        'WA': 'Washington',
+        'WI': 'Wisconsin',
+        'WV': 'West Virginia',
+        'WY': 'Wyoming'
+}
+
+	sent_file = open(sys.argv[1])
+	tweet_file = open(sys.argv[2])
+	#hw()
+   	l_s = lines(sent_file)
+	l_t = lines(tweet_file)
+	scores = {}
+	sent_file.seek(0,0)
+	tweet_file.seek(0,0)
+
+	for line in sent_file:
+		term, score = line.split("\t")
+		scores[term] = int(score)
+
+	#print scores.items() 
+	data = []
+	#with open('output.json') as json_data:
+	for line in tweet_file:
+		data.append(json.loads(line))
+	#pprint(data)
+	tweets = []
+	place = []
+	i = 0
+	while i < l_t:
+		try:	
+			if data[i]["place"]["name"].isspace():
+				i = i + 1
+			else:
+				tweets.append(data[i]["text"])
+				place.append(data[i]["place"]["name"])
+				#print data[i]["text"]," ",data[i]["place"]["name"]
+				#print " "
+				i = i + 1
+		except:
+			i = i + 1
+	l = 0
+	tweet_score = []
+	place_dic = {}
+	for items in tweets:
+		local_score = 0
+		wordlist = re.sub("[^\w]", " ", items).split()
+		for word in wordlist:
+			word = word.lower()
+			if scores.has_key(word):
+				local_score = local_score + scores[word]
+		#place_dic[place[l]] = local_score
+		place_dic[local_score] = place[l]
+		tweet_score.append(local_score)
+		#print local_score," ",place[l]
+		l = l + 1
+
+	tweet_score.sort(reverse = True)
+	s = place_dic[tweet_score[0]]
+	for k,v in states.iteritems():
+		
+		if v == s:
+			s = k
+
+	print s
+	#print tweets[len(tweets)-5]
+	#print tweets[1]
+
+if __name__ == '__main__':
+    main()

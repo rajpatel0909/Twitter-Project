@@ -1,0 +1,11 @@
+SELECT count(*)
+FROM(
+	SELECT f1.term
+	FROM frequency f1
+	WHERE (f1.docid="10398_txt_earn" AND f1.count = "1")
+	UNION ALL
+	SELECT f2.term
+	from frequency f2
+	WHERE (f2.docid="925_txt_trade" AND f2.count = "1")
+	)
+;

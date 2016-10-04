@@ -1,0 +1,13 @@
+SELECT sum(co)
+FROM(
+	SELECT  sum((x.count*y.count)) as co
+	FROM(
+		(SELECT term, count FROM frequency f1
+		WHERE f1.docid = "10080_txt_crude")x,
+
+		(SELECT term, count FROM frequency f2
+		WHERE f2.docid = "17035_txt_earn")y
+		)
+	WHERE x.term = y.term
+	);
+		
